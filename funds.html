@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>funds</title>
+	<script type='text/javascript' src='http://code.jquery.com/jquery-1.11.0.min.js'></script>
+</head>
+<body>
+	<p id="debug"></p>
+</body>
+<script type="text/javascript">
+	var debugElement = null;
+	var members = [];
+	function responseReceived() {
+		
+	}
+	function HTMLParser(aHTMLString){
+
+	}
+	function getContentFromUrl(urlString){
+		// Old compatibility code, no longer needed.
+		if (window.XMLHttpRequest) { // Mozilla, Safari, IE7+ ...
+			httpRequest = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 6 and older
+			httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		if (!httpRequest) {
+			debugElement.innerHTML += 'Giving up :( Cannot create an XMLHTTP instance';
+			return false;
+		}
+		var res = '';
+		httpRequest.onreadystatechange = function () {
+			if (httpRequest.readyState === XMLHttpRequest.DONE) {
+				if (httpRequest.status === 200) {
+					responseText = httpRequest.responseText;
+					debugElement.innerHTML = typeof responseText;
+					// debugElement.innerHTML = responseText;
+					var doc = document.implementation.createHTMLDocument('example');
+					doc.documentElement.innerHTML = responseText;
+					funds = doc.getElementsByClassName('mon current')
+					money = funds[0].lastElementChild.lastChild.wholeText.replace(',', '');
+					document.getElementById(members[urlString]).innerHTML = members[urlString] + " : " + money;
+					// alert(responseText);
+				} else {
+					alert('There was a problem with the request.');
+				}
+			} else {
+				debugElement.innerHTML = 'not ready ' + httpRequest.readyState;
+			}
+		}
+		httpRequest.open('GET', urlString , true);
+		httpRequest.send();
+	}
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+	
+	// self executing function here
+	(function() {
+		// your page initialization code here
+		// the DOM will be available here
+
+		function appendDiv(text, idName) {
+			var newDiv = document.createElement("div");
+			var newContent = document.createTextNode(text);
+			newDiv.appendChild(newContent); //add the text node to the newly created div.
+			newDiv.id = idName;
+			document.body.append(newDiv);
+		}
+		members['https://wds.modian.com/show_weidashang_pro/5464#1'] = '曾艳芬';
+		members['https://wds.modian.com/show_weidashang_pro/5463#1'] = 'jzy';
+		members['https://wds.modian.com/show_weidashang_pro/5462#1'] = 'yjy';
+		members['https://wds.modian.com/show_weidashang_pro/5461#1'] = 'yby';
+		// currentMember =
+		async function refresh() {
+			for (var key in members) {
+				elem = members[key];
+				appendDiv(elem + ' : ', elem);
+				getContentFromUrl(key);
+				await sleep(500);
+			}
+		}
+		refresh();
+		// var parser = document.createElement('a');
+		// parser.href = 'https://wds.modian.com/show_weidashang_pro/5464#1';
+		// debugElement = document.getElementById('debug');
+		// response = getContentFromUrl(parser.href);
+		
+	})();
+</script>
+</html>
