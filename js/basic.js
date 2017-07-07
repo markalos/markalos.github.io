@@ -1,6 +1,5 @@
 function onElementClick(element, url) {
-	element.addEventListener('click', function(url) {
-		console.log(url);
-		console.log(window.location.href);
+	element.addEventListener('click', function(event) {
+		window.location.href = url;
 	}, true);
 }
